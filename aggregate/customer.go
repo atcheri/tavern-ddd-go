@@ -36,3 +36,26 @@ func NewCustomer(name string) (Customer, error) {
 
 	return customer, nil
 }
+
+func (c *Customer) GetID() uuid.UUID {
+	return c.person.ID
+}
+
+func (c *Customer) SetID(id uuid.UUID) {
+	if c.person == nil {
+		c.person = &entity.Person{}
+	}
+
+	c.person.ID = id
+}
+
+func (c *Customer) SetName(name string) {
+	if c.person == nil {
+		c.person = &entity.Person{}
+	}
+	c.person.Name = name
+}
+
+func (c *Customer) GetName() string {
+	return c.person.Name
+}
