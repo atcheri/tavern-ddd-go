@@ -9,8 +9,8 @@ import (
 type TavernConfiguration func(ts *TavernService) error
 
 type TavernService struct {
-	orderService *OrderService
-	// billingService *BillingService
+	orderService   *OrderService
+	billingService *BillingService
 }
 
 func NewTavernService(configs ...TavernConfiguration) (*TavernService, error) {
@@ -33,9 +33,14 @@ func WithOrderService(os *OrderService) TavernConfiguration {
 	}
 }
 
-func WithBillingService(os *OrderService) TavernConfiguration {
+func WithBillingService(os *OrderService, sender BillSender) TavernConfiguration {
 	return func(t *TavernService) error {
-		t.orderService = os
+		bs, err := NewBillingService(os, sender)
+		if err != nil {
+			return err
+		}
+
+		t.billingService = bs
 		return nil
 	}
 }
@@ -48,8 +53,7 @@ func (t *TavernService) Order(customer uuid.UUID, products []uuid.UUID) error {
 
 	log.Printf("Billing the customer %s of %0.0f TavernCoins", customer, total)
 
-	// TODO: add this method, test and implement
-	// t.BillingService.Bill(customer, total)
+	t.billingService.BillCustomer(customer, total)
 
 	return nil
 }

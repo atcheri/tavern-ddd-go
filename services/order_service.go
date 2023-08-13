@@ -84,17 +84,19 @@ func (os *OrderService) CreateOrder(customerID uuid.UUID, productsIDs []uuid.UUI
 	return total, nil
 }
 
-func (os *OrderService) AddCustomer(name string) (uuid.UUID, error) {
+func (os *OrderService) AddCustomer(c aggregate.Customer) (uuid.UUID, error) {
+	err := os.customerRepo.Add(c)
+	if err != nil {
+		return uuid.Nil, err
+	}
+	return c.GetID(), nil
+}
+
+func (os *OrderService) AddNewCustomer(name string) (uuid.UUID, error) {
 	c, err := aggregate.NewCustomer(name)
 	if err != nil {
 		return uuid.Nil, err
 	}
 
-	// Add customer to Repo
-	err = os.customerRepo.Add(c)
-	if err != nil {
-		return uuid.Nil, err
-	}
-
-	return c.GetID(), nil
+	return os.AddCustomer(c)
 }

@@ -20,10 +20,10 @@ func TestTavernService_Order(t *testing.T) {
 		t.Error(err)
 	}
 
+	sender := &mockSender{}
 	tavernService, err := NewTavernService(
 		WithOrderService(os),
-		// TODO
-		// WithBillingService(),
+		WithBillingService(os, sender),
 	)
 	if err != nil {
 		t.Error(err)
@@ -38,12 +38,13 @@ func TestTavernService_Order(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	order := []uuid.UUID{
+	orders := []uuid.UUID{
 		products[0].GetID(),
 	}
+	sender.On("Send", cust.GetID(), products[0].GetPrice()).Return(nil)
 
 	// act
-	err = tavernService.Order(cust.GetID(), order)
+	err = tavernService.Order(cust.GetID(), orders)
 
 	// assert
 	if err != nil {

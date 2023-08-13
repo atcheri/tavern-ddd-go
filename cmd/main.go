@@ -3,6 +3,7 @@ package main
 
 import (
 	"github.com/atcheri/tavern-ddd-go/aggregate"
+	"github.com/atcheri/tavern-ddd-go/infrastructure/sender"
 	"github.com/atcheri/tavern-ddd-go/services"
 	"github.com/google/uuid"
 )
@@ -19,19 +20,16 @@ func main() {
 		panic(err)
 	}
 
-	// TODO: Create the Billing Service to use in the tavern
-	// bs, err := services.NewBillingService(...)
-
 	// Create tavern service
 	tavern, err := services.NewTavernService(
 		services.WithOrderService(os),
-		services.WithBillingService(os),
+		services.WithBillingService(os, &sender.LogSender{}),
 	)
 	if err != nil {
 		panic(err)
 	}
 
-	uid, err := os.AddCustomer("Mister who")
+	uid, err := os.AddNewCustomer("Mister who")
 	if err != nil {
 		panic(err)
 	}
@@ -39,17 +37,12 @@ func main() {
 		products[0].GetID(),
 	}
 
-	// Execute Order
+	// Execute Order and send the bill to the customer
 	err = tavern.Order(uid, order)
 	if err != nil {
 		panic(err)
 	}
 
-	// Bill the customer
-	err = tavern.Bill(uid, order)
-	if err != nil {
-		panic(err)
-	}
 }
 
 func productInventory() []aggregate.Product {

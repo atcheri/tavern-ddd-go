@@ -31,7 +31,7 @@ func generateTestProducts(t *testing.T) []aggregate.Product {
 	return products
 }
 
-func TestOrderService_NewOrderService(t *testing.T) {
+func TestOrderService_CreateOrder(t *testing.T) {
 	products := generateTestProducts(t)
 
 	os, err := NewOrderService(WithMemoryCustomerRepository(), WithMemoryProductRepository(products))
