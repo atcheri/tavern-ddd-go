@@ -9,8 +9,8 @@ import (
 type TavernConfiguration func(ts *TavernService) error
 
 type TavernService struct {
-	OrderService   *OrderService
-	BillingService *BillingService
+	orderService *OrderService
+	// billingService *BillingService
 }
 
 func NewTavernService(configs ...TavernConfiguration) (*TavernService, error) {
@@ -28,13 +28,20 @@ func NewTavernService(configs ...TavernConfiguration) (*TavernService, error) {
 
 func WithOrderService(os *OrderService) TavernConfiguration {
 	return func(t *TavernService) error {
-		t.OrderService = os
+		t.orderService = os
+		return nil
+	}
+}
+
+func WithBillingService(os *OrderService) TavernConfiguration {
+	return func(t *TavernService) error {
+		t.orderService = os
 		return nil
 	}
 }
 
 func (t *TavernService) Order(customer uuid.UUID, products []uuid.UUID) error {
-	total, err := t.OrderService.CreateOrder(customer, products)
+	total, err := t.orderService.CreateOrder(customer, products)
 	if err != nil {
 		return err
 	}
