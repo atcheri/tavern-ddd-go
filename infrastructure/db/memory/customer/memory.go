@@ -9,18 +9,18 @@ import (
 	"github.com/google/uuid"
 )
 
-type MemoryRepository struct {
+type MemoryCustomerRepository struct {
 	customers map[uuid.UUID]aggregate.Customer
 	mutex     sync.Mutex
 }
 
-func New() *MemoryRepository {
-	return &MemoryRepository{
+func New() *MemoryCustomerRepository {
+	return &MemoryCustomerRepository{
 		customers: make(map[uuid.UUID]aggregate.Customer),
 	}
 }
 
-func (mr *MemoryRepository) Get(id uuid.UUID) (aggregate.Customer, error) {
+func (mr *MemoryCustomerRepository) Get(id uuid.UUID) (aggregate.Customer, error) {
 	if c, ok := mr.customers[id]; ok {
 		return c, nil
 	}
@@ -28,7 +28,7 @@ func (mr *MemoryRepository) Get(id uuid.UUID) (aggregate.Customer, error) {
 	return aggregate.Customer{}, customer.ErrCustomerNotFound
 }
 
-func (mr *MemoryRepository) Add(c aggregate.Customer) error {
+func (mr *MemoryCustomerRepository) Add(c aggregate.Customer) error {
 	mr.mutex.Lock()
 	defer mr.mutex.Unlock()
 
@@ -45,7 +45,7 @@ func (mr *MemoryRepository) Add(c aggregate.Customer) error {
 	return nil
 }
 
-func (mr *MemoryRepository) Update(c aggregate.Customer) error {
+func (mr *MemoryCustomerRepository) Update(c aggregate.Customer) error {
 	mr.mutex.Lock()
 	defer mr.mutex.Unlock()
 

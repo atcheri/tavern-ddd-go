@@ -24,7 +24,7 @@ func TestMemory_GetCustomer(t *testing.T) {
 	id := cust.GetID()
 
 	// Create the repo to use, and add some test Data to it for testing
-	repo := MemoryRepository{
+	repo := MemoryCustomerRepository{
 		customers: map[uuid.UUID]aggregate.Customer{
 			id: cust,
 		},
@@ -81,7 +81,7 @@ func TestMemory_AddCustomer(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		repo := MemoryRepository{
+		repo := MemoryCustomerRepository{
 			customers: map[uuid.UUID]aggregate.Customer{},
 		}
 

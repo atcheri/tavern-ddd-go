@@ -5,7 +5,7 @@ import (
 )
 
 type Item struct {
-	ID         uuid.UUID
-	Name       string
-	Desciption string
+	ID          uuid.UUID
+	Name        string
+	Description string
 }
