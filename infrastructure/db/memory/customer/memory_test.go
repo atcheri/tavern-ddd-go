@@ -3,7 +3,6 @@ package memory
 import (
 	"testing"
 
-	"github.com/atcheri/tavern-ddd-go/aggregate"
 	"github.com/atcheri/tavern-ddd-go/domain/customer"
 	"github.com/google/uuid"
 	"github.com/iamkoch/ensure"
@@ -17,7 +16,7 @@ func TestMemory_GetCustomer(t *testing.T) {
 	}
 
 	// Create a fake customer to add to repository
-	cust, err := aggregate.NewCustomer("Percy")
+	cust, err := customer.NewCustomer("Percy")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -25,7 +24,7 @@ func TestMemory_GetCustomer(t *testing.T) {
 
 	// Create the repo to use, and add some test Data to it for testing
 	repo := MemoryCustomerRepository{
-		customers: map[uuid.UUID]aggregate.Customer{
+		customers: map[uuid.UUID]customer.Customer{
 			id: cust,
 		},
 	}
@@ -82,22 +81,22 @@ func TestMemory_AddCustomer(t *testing.T) {
 
 	for _, tc := range testCases {
 		repo := MemoryCustomerRepository{
-			customers: map[uuid.UUID]aggregate.Customer{},
+			customers: map[uuid.UUID]customer.Customer{},
 		}
 
 		t.Run("Add a new customer in the repository", func(t *testing.T) {
 			var err error
-			var customer aggregate.Customer
+			var cust customer.Customer
 			ensure.That("testing the Add method", func(s *ensure.Scenario) {
 				s.Given(tc.name, func() {
-					c, e := aggregate.NewCustomer(tc.cust)
+					c, e := customer.NewCustomer(tc.cust)
 					if e != nil {
 						t.Fatal(e)
 					}
-					customer = c
+					cust = c
 				})
 				s.When("Calling the Add method", func() {
-					err = repo.Add(customer)
+					err = repo.Add(cust)
 				})
 				s.Then("it returns the corresponding error", func() {
 					if err != tc.err {

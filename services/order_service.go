@@ -3,7 +3,6 @@ package services
 import (
 	"log"
 
-	"github.com/atcheri/tavern-ddd-go/aggregate"
 	"github.com/atcheri/tavern-ddd-go/domain/customer"
 	"github.com/atcheri/tavern-ddd-go/domain/product"
 	customerRepo "github.com/atcheri/tavern-ddd-go/infrastructure/db/memory/customer"
@@ -46,7 +45,7 @@ func WithMemoryCustomerRepository() OrderConfiguration {
 	return WithCustomerRepository(cr)
 }
 
-func WithMemoryProductRepository(products []aggregate.Product) OrderConfiguration {
+func WithMemoryProductRepository(products []product.Product) OrderConfiguration {
 	return func(os *OrderService) error {
 		pr := productRepo.NewProductRepo()
 
@@ -68,7 +67,7 @@ func (os *OrderService) CreateOrder(customerID uuid.UUID, productsIDs []uuid.UUI
 		return 0, err
 	}
 
-	var products []aggregate.Product
+	var products []product.Product
 	var total float64
 	for _, id := range productsIDs {
 		p, err := os.productRepo.GetByID(id)
@@ -84,7 +83,7 @@ func (os *OrderService) CreateOrder(customerID uuid.UUID, productsIDs []uuid.UUI
 	return total, nil
 }
 
-func (os *OrderService) AddCustomer(c aggregate.Customer) (uuid.UUID, error) {
+func (os *OrderService) AddCustomer(c customer.Customer) (uuid.UUID, error) {
 	err := os.customerRepo.Add(c)
 	if err != nil {
 		return uuid.Nil, err
@@ -93,7 +92,7 @@ func (os *OrderService) AddCustomer(c aggregate.Customer) (uuid.UUID, error) {
 }
 
 func (os *OrderService) AddNewCustomer(name string) (uuid.UUID, error) {
-	c, err := aggregate.NewCustomer(name)
+	c, err := customer.NewCustomer(name)
 	if err != nil {
 		return uuid.Nil, err
 	}

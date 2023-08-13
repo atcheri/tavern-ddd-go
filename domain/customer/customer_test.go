@@ -1,9 +1,9 @@
-package aggregate_test
+package customer_test
 
 import (
 	"testing"
 
-	"github.com/atcheri/tavern-ddd-go/aggregate"
+	"github.com/atcheri/tavern-ddd-go/domain/customer"
 	"github.com/iamkoch/ensure"
 )
 
@@ -18,7 +18,7 @@ func TestCustomer_NewCustomer(t *testing.T) {
 		{
 			test: "Empty name validation",
 			name: "",
-			err:  aggregate.ErrInvalidPersonName,
+			err:  customer.ErrInvalidPersonName,
 		},
 		{
 			test: "Valid name",
@@ -37,7 +37,7 @@ func TestCustomer_NewCustomer(t *testing.T) {
 				})
 
 				s.When("Calling the NewCustomer factory function", func() {
-					_, err = aggregate.NewCustomer(name)
+					_, err = customer.NewCustomer(name)
 				})
 
 				s.Then("NewCustomer returns an error", func() {

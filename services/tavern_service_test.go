@@ -3,7 +3,7 @@ package services
 import (
 	"testing"
 
-	"github.com/atcheri/tavern-ddd-go/aggregate"
+	"github.com/atcheri/tavern-ddd-go/domain/customer"
 	"github.com/bxcodec/faker/v3"
 	"github.com/google/uuid"
 )
@@ -29,7 +29,7 @@ func TestTavernService_Order(t *testing.T) {
 		t.Error(err)
 	}
 
-	cust, err := aggregate.NewCustomer(faker.Name())
+	cust, err := customer.NewCustomer(faker.Name())
 	if err != nil {
 		t.Error(err)
 	}

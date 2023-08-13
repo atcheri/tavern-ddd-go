@@ -4,7 +4,8 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/atcheri/tavern-ddd-go/aggregate"
+	"github.com/atcheri/tavern-ddd-go/domain/customer"
+	"github.com/atcheri/tavern-ddd-go/domain/product"
 	"github.com/bxcodec/faker/v3"
 	"github.com/google/uuid"
 )
@@ -13,8 +14,8 @@ func randomPrice() float64 {
 	return rand.Float64() * 100
 }
 
-func fakeProduct(t *testing.T) aggregate.Product {
-	p, e := aggregate.NewProduct(faker.Name(), faker.Paragraph(), randomPrice())
+func fakeProduct(t *testing.T) product.Product {
+	p, e := product.NewProduct(faker.Name(), faker.Paragraph(), randomPrice())
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -22,8 +23,8 @@ func fakeProduct(t *testing.T) aggregate.Product {
 	return p
 }
 
-func generateTestProducts(t *testing.T) []aggregate.Product {
-	products := make([]aggregate.Product, 0)
+func generateTestProducts(t *testing.T) []product.Product {
+	products := make([]product.Product, 0)
 	for i := 1; i < 5; i++ {
 		products = append(products, fakeProduct(t))
 	}
@@ -39,7 +40,7 @@ func TestOrderService_CreateOrder(t *testing.T) {
 		t.Error(err)
 	}
 
-	cust, err := aggregate.NewCustomer(faker.Name())
+	cust, err := customer.NewCustomer(faker.Name())
 	if err != nil {
 		t.Error(err)
 	}

@@ -2,7 +2,7 @@
 package main
 
 import (
-	"github.com/atcheri/tavern-ddd-go/aggregate"
+	"github.com/atcheri/tavern-ddd-go/domain/product"
 	"github.com/atcheri/tavern-ddd-go/infrastructure/sender"
 	"github.com/atcheri/tavern-ddd-go/services"
 	"github.com/google/uuid"
@@ -45,20 +45,20 @@ func main() {
 
 }
 
-func productInventory() []aggregate.Product {
-	beer, err := aggregate.NewProduct("Beer", "Healthy Beverage", 1.99)
+func productInventory() []product.Product {
+	beer, err := product.NewProduct("Beer", "Healthy Beverage", 1.99)
 	if err != nil {
 		panic(err)
 	}
-	peenuts, err := aggregate.NewProduct("Peenuts", "Healthy Snacks", 0.99)
+	peenuts, err := product.NewProduct("Peenuts", "Healthy Snacks", 0.99)
 	if err != nil {
 		panic(err)
 	}
-	wine, err := aggregate.NewProduct("Wine", "Healthy Snacks", 0.99)
+	wine, err := product.NewProduct("Wine", "Healthy Snacks", 0.99)
 	if err != nil {
 		panic(err)
 	}
-	products := []aggregate.Product{
+	products := []product.Product{
 		beer, peenuts, wine,
 	}
 	return products

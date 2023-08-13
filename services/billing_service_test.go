@@ -3,7 +3,8 @@ package services
 import (
 	"testing"
 
-	"github.com/atcheri/tavern-ddd-go/aggregate"
+	"github.com/atcheri/tavern-ddd-go/domain/customer"
+	"github.com/atcheri/tavern-ddd-go/domain/product"
 	"github.com/bxcodec/faker/v3"
 	"github.com/google/uuid"
 	"github.com/samber/lo"
@@ -37,14 +38,14 @@ func TestBillingService_BillCustomer(t *testing.T) {
 		t.Error(err)
 	}
 
-	customer, err := aggregate.NewCustomer(faker.Name())
+	customer, err := customer.NewCustomer(faker.Name())
 	if err != nil {
 		t.Error(err)
 	}
 
 	os.AddCustomer(customer)
 
-	orderedProducts := lo.Map(products, func(p aggregate.Product, index int) uuid.UUID {
+	orderedProducts := lo.Map(products, func(p product.Product, index int) uuid.UUID {
 		return p.GetID()
 	})
 	total, err := os.CreateOrder(customer.GetID(), orderedProducts)

@@ -4,36 +4,35 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/atcheri/tavern-ddd-go/aggregate"
 	"github.com/atcheri/tavern-ddd-go/domain/customer"
 	"github.com/google/uuid"
 )
 
 type MemoryCustomerRepository struct {
-	customers map[uuid.UUID]aggregate.Customer
+	customers map[uuid.UUID]customer.Customer
 	mutex     sync.Mutex
 }
 
 func NewCustomerRepo() *MemoryCustomerRepository {
 	return &MemoryCustomerRepository{
-		customers: make(map[uuid.UUID]aggregate.Customer),
+		customers: make(map[uuid.UUID]customer.Customer),
 	}
 }
 
-func (mr *MemoryCustomerRepository) Get(id uuid.UUID) (aggregate.Customer, error) {
+func (mr *MemoryCustomerRepository) Get(id uuid.UUID) (customer.Customer, error) {
 	if c, ok := mr.customers[id]; ok {
 		return c, nil
 	}
 
-	return aggregate.Customer{}, customer.ErrCustomerNotFound
+	return customer.Customer{}, customer.ErrCustomerNotFound
 }
 
-func (mr *MemoryCustomerRepository) Add(c aggregate.Customer) error {
+func (mr *MemoryCustomerRepository) Add(c customer.Customer) error {
 	mr.mutex.Lock()
 	defer mr.mutex.Unlock()
 
 	if mr.customers == nil {
-		mr.customers = make(map[uuid.UUID]aggregate.Customer)
+		mr.customers = make(map[uuid.UUID]customer.Customer)
 	}
 
 	if _, ok := mr.customers[c.GetID()]; ok {
@@ -45,7 +44,7 @@ func (mr *MemoryCustomerRepository) Add(c aggregate.Customer) error {
 	return nil
 }
 
-func (mr *MemoryCustomerRepository) Update(c aggregate.Customer) error {
+func (mr *MemoryCustomerRepository) Update(c customer.Customer) error {
 	mr.mutex.Lock()
 	defer mr.mutex.Unlock()
 
