@@ -55,7 +55,7 @@ func TestMemory_GetCustomer(t *testing.T) {
 					_, err = repo.Get(id)
 				})
 
-				s.Then("it returns the correspondin error", func() {
+				s.Then("it returns the corresponding error", func() {
 					if err != tc.err {
 						t.Errorf("expected = %v, but got = %v", err, tc.err)
 					}
@@ -63,5 +63,48 @@ func TestMemory_GetCustomer(t *testing.T) {
 			}, t)
 		})
 	}
+}
 
+func TestMemory_AddCustomer(t *testing.T) {
+	type testCase struct {
+		name string
+		cust string
+		err  error
+	}
+
+	testCases := []testCase{
+		{
+			name: "A customer with a valid name",
+			cust: "Percy",
+			err:  nil,
+		},
+	}
+
+	for _, tc := range testCases {
+		repo := MemoryRepository{
+			customers: map[uuid.UUID]aggregate.Customer{},
+		}
+
+		t.Run("Add a new customer in the repository", func(t *testing.T) {
+			var err error
+			var customer aggregate.Customer
+			ensure.That("testing the Add method", func(s *ensure.Scenario) {
+				s.Given(tc.name, func() {
+					c, e := aggregate.NewCustomer(tc.cust)
+					if e != nil {
+						t.Fatal(e)
+					}
+					customer = c
+				})
+				s.When("Calling the Add method", func() {
+					err = repo.Add(customer)
+				})
+				s.Then("it returns the corresponding error", func() {
+					if err != tc.err {
+						t.Errorf("expected = %v, but got = %v", err, tc.err)
+					}
+				})
+			}, t)
+		})
+	}
 }
